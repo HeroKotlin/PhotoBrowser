@@ -3,19 +3,15 @@ package com.github.herokotlin.photobrowser
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import com.github.herokotlin.photoview.PhotoViewCallback
 import com.github.herokotlin.photoview.PhotoView
-import com.github.herokotlin.photobrowser.loader.PhotoLoader
-import com.github.herokotlin.photobrowser.loader.PhotoLoaderListener
-import com.github.herokotlin.photobrowser.model.Photo
 import kotlinx.android.synthetic.main.photo_browser_page.view.*
 
-class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val photoLoader: PhotoLoader, val page: Int, val photo: Photo, val callback: PhotoBrowserCallback) : RelativeLayout(context) {
+class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val photoLoader: PhotoLoader, val page: Int, val photo: PhotoModel, val callback: PhotoBrowserCallback) : RelativeLayout(context) {
 
     private var hasRawUrl = false
 
@@ -130,9 +126,8 @@ class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val photoL
     }
 
     private fun loadPhoto(url: String) {
-        photoLoader.load(photoView, url, photo, object: PhotoLoaderListener {
-
-            override fun onLoadStart(hasProgress: Boolean) {
+        photoLoader.load(photoView, url, photo,
+            { hasProgress: Boolean ->
                 if (hasProgress) {
                     showView(spinnerView)
                 }
@@ -143,35 +138,33 @@ class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val photoL
                     hideView(rawButton)
                 }
                 hideView(downloadButton)
-            }
-
-            override fun onLoadSuccess() {
-                hideView(spinnerView)
-                hideView(progressView)
-                if (hasRawUrl) {
-                    if (url == photo.rawUrl) {
-                        hideView(rawButton)
+            },
+            { loaded: Float, total: Float ->
+                spinnerView.value = loaded / total
+            },
+            { success: Boolean ->
+                if (success) {
+                    hideView(spinnerView)
+                    hideView(progressView)
+                    if (hasRawUrl) {
+                        if (url == photo.rawUrl) {
+                            hideView(rawButton)
+                        }
+                        else if (url == photo.highQualityUrl) {
+                            showView(rawButton)
+                        }
                     }
-                    else if (url == photo.highQualityUrl) {
+                    showView(downloadButton)
+                }
+                else {
+                    hideView(spinnerView)
+                    hideView(progressView)
+                    if (hasRawUrl && url == photo.rawUrl) {
                         showView(rawButton)
                     }
                 }
-                showView(downloadButton)
             }
-
-            override fun onLoadError() {
-                hideView(spinnerView)
-                hideView(progressView)
-                if (hasRawUrl && url == photo.rawUrl) {
-                    showView(rawButton)
-                }
-            }
-
-            override fun onLoadProgress(loaded: Float, total: Float) {
-                spinnerView.value = loaded / total
-            }
-
-        })
+        )
     }
 
     private fun downloadPhoto() {

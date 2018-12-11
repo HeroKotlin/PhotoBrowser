@@ -1,6 +1,6 @@
-package com.github.herokotlin.photobrowser.model
+package com.github.herokotlin.photobrowser
 
-data class Photo(
+data class PhotoModel (
     val thumbnailUrl: String,
     val highQualityUrl: String,
     val rawUrl: String

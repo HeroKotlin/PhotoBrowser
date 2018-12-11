@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import com.github.herokotlin.photobrowser.loader.PhotoLoader
-import com.github.herokotlin.photobrowser.model.Photo
 import kotlinx.android.synthetic.main.photo_browser.view.*
 
 class PhotoBrowser: RelativeLayout {
@@ -67,7 +65,7 @@ class PhotoBrowser: RelativeLayout {
             pager.offscreenPageLimit = value
         }
 
-    var photos = listOf<Photo>()
+    var photos = listOf<PhotoModel>()
 
         set(value) {
             field = value

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
-import com.github.herokotlin.photobrowser.model.Photo
 import kotlinx.android.synthetic.main.photo_browser_activity.*
 
 class PhotoBrowserActivity: AppCompatActivity() {
@@ -68,7 +67,13 @@ class PhotoBrowserActivity: AppCompatActivity() {
 
         browserView.index = index
 
-        browserView.photos = thumbnailList.mapIndexed { i, s -> Photo(s, highQualityList[i], rawList[i]) }
+        browserView.photos = thumbnailList.mapIndexed { i, s ->
+            PhotoModel(
+                s,
+                highQualityList[i],
+                rawList[i]
+            )
+        }
 
     }
 }
