@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="photo_browser_raw_button_bg_color">#55000000</color>
+    <color name="photo_browser_raw_button_text_color">#FFF</color>
+    <color name="photo_browser_raw_button_border_color">#55ffffff</color>
+
+    <color name="photo_browser_progress_bar_color">#55FFFFFF</color>
+
+    <color name="photo_browser_number_indicator_text_color">#FFF</color>
+
+    <color name="photo_browser_dot_indicator_color_normal">#BBB</color>
+    <color name="photo_browser_dot_indicator_color_active">#FFF</color>
+
+</resources>

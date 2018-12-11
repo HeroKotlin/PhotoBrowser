@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="PhotoBrowser">
+        <attr name="indicator" format="string"/>
+        <attr name="pageMargin" format="dimension|reference"/>
+        <attr name="offscreenPageLimit" format="integer"/>
+    </declare-styleable>
+</resources>

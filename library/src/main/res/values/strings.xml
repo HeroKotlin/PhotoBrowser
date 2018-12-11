@@ -1,0 +1,5 @@
+<resources>
+    <string name="photo_browser_raw_button_title">查看原图</string>
+    <string name="photo_browser_download_success">保存成功</string>
+    <string name="photo_browser_download_failure">保存失败</string>
+</resources>

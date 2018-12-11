@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.github.herokotlin.photobrowser.PhotoViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.github.herokotlin.dotindicator.DotIndicator
+        android:id="@+id/dotIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/photo_browser_indicator_margin_bottom"
+        android:visibility="gone"
+        app:dot_indicator_gap="@dimen/photo_browser_dot_indicator_gap"
+        app:dot_indicator_radius="@dimen/photo_browser_dot_indicator_radius_normal"
+        app:dot_indicator_active_radius="@dimen/photo_browser_dot_indicator_radius_active"
+        app:dot_indicator_color="@color/photo_browser_dot_indicator_color_normal"
+        app:dot_indicator_active_color="@color/photo_browser_dot_indicator_color_active"/>
+
+    <com.github.herokotlin.numberindicator.NumberIndicator
+        android:id="@+id/numberIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/photo_browser_indicator_margin_bottom"
+        android:visibility="gone"
+        app:number_indicator_gap="@dimen/photo_browser_number_indicator_gap"
+        app:number_indicator_text_size="@dimen/photo_browser_number_indicator_text_size"
+        app:number_indicator_text_color="@color/photo_browser_number_indicator_text_color"/>
+
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle"
+       android:useLevel="true">
+
+    <stroke
+        android:width="@dimen/photo_browser_raw_button_border_width"
+        android:color="@color/photo_browser_raw_button_border_color" />
+
+    <solid android:color="@color/photo_browser_raw_button_bg_color" />
+
+    <corners android:bottomLeftRadius="@dimen/photo_browser_raw_button_border_radius"
+             android:bottomRightRadius="@dimen/photo_browser_raw_button_border_radius"
+             android:topLeftRadius="@dimen/photo_browser_raw_button_border_radius"
+             android:topRightRadius="@dimen/photo_browser_raw_button_border_radius" />
+
+    <padding android:top="@dimen/photo_browser_raw_button_padding_vertical"
+             android:bottom="@dimen/photo_browser_raw_button_padding_vertical"
+             android:left="@dimen/photo_browser_raw_button_padding_horizontal"
+             android:right="@dimen/photo_browser_raw_button_padding_horizontal" />
+
+</shape>
