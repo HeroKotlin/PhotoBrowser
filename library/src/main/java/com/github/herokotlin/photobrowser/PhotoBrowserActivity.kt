@@ -65,8 +65,6 @@ class PhotoBrowserActivity: AppCompatActivity() {
             }
         }
 
-        browserView.index = index
-
         browserView.photos = thumbnailList.mapIndexed { i, s ->
             PhotoModel(
                 s,
@@ -74,6 +72,8 @@ class PhotoBrowserActivity: AppCompatActivity() {
                 rawList[i]
             )
         }
+
+        browserView.index = index
 
     }
 }
