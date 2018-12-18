@@ -104,13 +104,15 @@ class PhotoBrowser: RelativeLayout {
             numberIndicator.index = value
 
             if (value >= 0 && value < photos.count()) {
-                if (value != getActualIndex()) {
+                if (!isPageScrolling && value != pager.currentItem) {
                     pager.currentItem = value
                 }
                 updateStatus(photos[value])
             }
 
         }
+
+    private var isPageScrolling = false
 
     constructor(context: Context) : super(context) {
         init(null, 0)
@@ -154,18 +156,21 @@ class PhotoBrowser: RelativeLayout {
 
 
 
-        pager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+        pager.addOnPageChangeListener(object: ViewPager.SimpleOnPageChangeListener() {
 
             override fun onPageScrollStateChanged(state: Int) {
-
+                when (state) {
+                    ViewPager.SCROLL_STATE_IDLE -> {
+                        isPageScrolling = false
+                    }
+                    ViewPager.SCROLL_STATE_DRAGGING -> {
+                        isPageScrolling = true
+                    }
+                }
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 index = position + if (positionOffset >= 0.5) 1 else 0
-            }
-
-            override fun onPageSelected(position: Int) {
-
             }
 
         })
@@ -230,10 +235,6 @@ class PhotoBrowser: RelativeLayout {
             getCurrentPage().savePhoto()
         }
 
-    }
-
-    private fun getActualIndex(): Int {
-        return Math.round(pager.scrollX.toFloat() / width)
     }
 
     private fun getCurrentPage(): PhotoPage {
