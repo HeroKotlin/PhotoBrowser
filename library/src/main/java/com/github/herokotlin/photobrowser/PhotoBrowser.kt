@@ -19,7 +19,7 @@ class PhotoBrowser: RelativeLayout {
 
     companion object {
 
-        var DEFAULT_PAGE_MARGIN = 14
+        var DEFAULT_PAGE_MARGIN = 30
 
         var DEFAULT_OFFSCREEN_PAGE_LIMIT = 1
 

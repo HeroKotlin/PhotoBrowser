@@ -2,7 +2,7 @@
 <resources>
 
     <dimen name="photo_browser_number_indicator_gap">4dp</dimen>
-    <dimen name="photo_browser_number_indicator_text_size">6dp</dimen>
+    <dimen name="photo_browser_number_indicator_text_size">5dp</dimen>
     <dimen name="photo_browser_number_indicator_margin_bottom">15dp</dimen>
 
     <dimen name="photo_browser_dot_indicator_gap">4dp</dimen>

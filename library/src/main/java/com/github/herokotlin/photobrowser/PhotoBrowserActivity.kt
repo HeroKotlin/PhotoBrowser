@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import com.github.herokotlin.photobrowser.model.Photo
@@ -16,16 +17,15 @@ class PhotoBrowserActivity: AppCompatActivity() {
 
         private const val KEY_INDEX = "index"
 
-        private const val KEY_THUMBNAIL_LIST = "thumbnailList"
-        private const val KEY_HIGH_QUALITY_LIST = "highQualityList"
-        private const val KEY_RAW_LIST = "rawList"
+        private const val KEY_PHOTOS = "photos"
 
-        fun newInstance(context: Context, index: Int, thumbnailList: Array<String>, highQualityList: Array<String>, rawList: Array<String>) {
+        private const val KEY_PAGE_MARGIN = "pageMargin"
+
+        fun newInstance(context: Context, photos: ArrayList<Photo>, index: Int, pageMargin: Int) {
             val intent = Intent(context, PhotoBrowserActivity::class.java)
+            intent.putParcelableArrayListExtra(KEY_PHOTOS, photos)
             intent.putExtra(KEY_INDEX, index)
-            intent.putExtra(KEY_THUMBNAIL_LIST, thumbnailList)
-            intent.putExtra(KEY_HIGH_QUALITY_LIST, highQualityList)
-            intent.putExtra(KEY_RAW_LIST, rawList)
+            intent.putExtra(KEY_PAGE_MARGIN, pageMargin)
             context.startActivity(intent)
         }
 
@@ -46,34 +46,27 @@ class PhotoBrowserActivity: AppCompatActivity() {
 
         setContentView(R.layout.photo_browser_activity)
 
+        val photos = intent.getParcelableArrayListExtra<Photo>(KEY_PHOTOS)
+
         val index = intent.getIntExtra(KEY_INDEX, 0)
 
-        val thumbnailList = intent.getStringArrayExtra(KEY_THUMBNAIL_LIST)
-        val highQualityList = intent.getStringArrayExtra(KEY_HIGH_QUALITY_LIST)
-        val rawList = intent.getStringArrayExtra(KEY_RAW_LIST)
+        val pageMargin = intent.getIntExtra(KEY_PAGE_MARGIN, 0)
+
 
         browserView.callback = object: PhotoBrowserCallback {
             override fun onTap(photo: Photo) {
-                this@PhotoBrowserActivity.finish()
+                finish()
             }
-
             override fun onSave(photo: Photo, success: Boolean) {
-                Toast.makeText(applicationContext,  if (success) "成功" else "失败", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext,  if (success) R.string.photo_browser_save_success else R.string.photo_browser_save_failure, Toast.LENGTH_SHORT).show()
             }
-
         }
 
-        browserView.photos = thumbnailList.mapIndexed { i, s ->
-            Photo(
-                s,
-                highQualityList[i],
-                rawList[i]
-            )
-        }
+        browserView.photos = photos
 
         browserView.index = index
 
-        browserView.indicator = PhotoBrowser.IndicatorType.DOT
+        browserView.pageMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pageMargin.toFloat(), resources.displayMetrics).toInt() 
 
     }
 }

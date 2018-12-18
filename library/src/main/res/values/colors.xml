@@ -3,7 +3,7 @@
 
     <color name="photo_browser_progress_bar_color">#55FFFFFF</color>
 
-    <color name="photo_browser_number_indicator_text_color">#DDFFFFFF</color>
+    <color name="photo_browser_number_indicator_text_color">#EEFFFFFF</color>
 
     <color name="photo_browser_dot_indicator_color_normal">#DDBBBBBB</color>
     <color name="photo_browser_dot_indicator_color_active">#DDFFFFFF</color>
