@@ -10,47 +10,19 @@
         android:layout_height="match_parent"/>
 
     <com.github.herokotlin.circlespinner.CircleSpinner
-        android:id="@+id/spinnerView"
+        android:id="@+id/circleSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
 
     <ProgressBar
-        android:id="@+id/progressView"
+        android:id="@+id/normalSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:indeterminateTint="@color/photo_browser_progress_bar_color"
         android:indeterminateTintMode="src_atop"
         android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/rawButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/photo_browser_raw_button_margin_bottom"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:background="@drawable/photo_browser_raw_button"
-        android:textSize="@dimen/photo_browser_raw_button_text_size"
-        android:textColor="@color/photo_browser_raw_button_text_color"
-        android:visibility="gone"
-        android:text="@string/photo_browser_raw_button_title"/>
-
-    <ImageView
-        android:id="@+id/downloadButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/photo_browser_download_button_margin_bottom"
-        android:layout_marginRight="@dimen/photo_browser_download_button_margin_right"
-        android:visibility="gone"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:src="@drawable/photo_browser_download"/>
 
 </RelativeLayout>

@@ -1,20 +1,18 @@
 package com.github.herokotlin.photobrowser
 
+import com.github.herokotlin.photobrowser.model.Photo
+
 interface PhotoBrowserCallback {
 
-    fun onTap(x: Float, y: Float) {
+    fun onTap(photo: Photo) {
 
     }
 
-    fun onLongPress(x: Float, y: Float) {
+    fun onLongPress(photo: Photo) {
 
     }
 
-    fun onDownloadSuccess() {
-
-    }
-
-    fun onDownloadFailure() {
+    fun onSave(photo: Photo, success: Boolean) {
 
     }
 

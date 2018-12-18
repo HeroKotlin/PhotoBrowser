@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.github.herokotlin.photobrowser.PhotoViewPager
+    <com.github.herokotlin.photobrowser.view.PhotoViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/photo_browser_indicator_margin_bottom"
+        android:layout_marginBottom="@dimen/photo_browser_dot_indicator_margin_bottom"
         android:visibility="gone"
         app:dot_indicator_gap="@dimen/photo_browser_dot_indicator_gap"
         app:dot_indicator_radius="@dimen/photo_browser_dot_indicator_radius_normal"
@@ -30,10 +30,36 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/photo_browser_indicator_margin_bottom"
+        android:layout_marginBottom="@dimen/photo_browser_number_indicator_margin_bottom"
         android:visibility="gone"
         app:number_indicator_gap="@dimen/photo_browser_number_indicator_gap"
+        app:number_indicator_separator="@string/photo_browser_number_indicator_separator"
         app:number_indicator_text_size="@dimen/photo_browser_number_indicator_text_size"
         app:number_indicator_text_color="@color/photo_browser_number_indicator_text_color"/>
+
+    <ImageView
+            android:id="@+id/rawButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/photo_browser_raw_button_margin_bottom"
+            android:visibility="gone"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:src="@drawable/photo_browser_raw"/>
+
+    <ImageView
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/photo_browser_save_button_margin_bottom"
+            android:layout_marginRight="@dimen/photo_browser_save_button_margin_right"
+            android:visibility="gone"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:src="@drawable/photo_browser_save"/>
 
 </RelativeLayout>

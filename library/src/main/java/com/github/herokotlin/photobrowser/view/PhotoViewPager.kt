@@ -1,4 +1,4 @@
-package com.github.herokotlin.photobrowser
+package com.github.herokotlin.photobrowser.view
 
 import android.content.Context
 import android.graphics.PointF

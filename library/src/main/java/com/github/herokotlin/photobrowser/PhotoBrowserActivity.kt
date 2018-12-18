@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
+import com.github.herokotlin.photobrowser.model.Photo
 import kotlinx.android.synthetic.main.photo_browser_activity.*
 
 class PhotoBrowserActivity: AppCompatActivity() {
@@ -52,21 +53,18 @@ class PhotoBrowserActivity: AppCompatActivity() {
         val rawList = intent.getStringArrayExtra(KEY_RAW_LIST)
 
         browserView.callback = object: PhotoBrowserCallback {
-            override fun onTap(x: Float, y: Float) {
+            override fun onTap(photo: Photo) {
                 this@PhotoBrowserActivity.finish()
             }
 
-            override fun onDownloadSuccess() {
-                Toast.makeText(applicationContext, R.string.photo_browser_download_success, Toast.LENGTH_SHORT).show()
+            override fun onSave(photo: Photo, success: Boolean) {
+                Toast.makeText(applicationContext,  if (success) "成功" else "失败", Toast.LENGTH_SHORT).show()
             }
 
-            override fun onDownloadFailure() {
-                Toast.makeText(applicationContext, R.string.photo_browser_download_failure, Toast.LENGTH_SHORT).show()
-            }
         }
 
         browserView.photos = thumbnailList.mapIndexed { i, s ->
-            PhotoModel(
+            Photo(
                 s,
                 highQualityList[i],
                 rawList[i]
@@ -74,6 +72,8 @@ class PhotoBrowserActivity: AppCompatActivity() {
         }
 
         browserView.index = index
+
+        browserView.indicator = PhotoBrowser.IndicatorType.DOT
 
     }
 }

@@ -4,11 +4,15 @@ import android.content.Context
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import com.github.herokotlin.photobrowser.model.Photo
+import com.github.herokotlin.photobrowser.util.Util
+import com.github.herokotlin.photobrowser.view.PhotoPage
 import kotlinx.android.synthetic.main.photo_browser.view.*
 
 class PhotoBrowser: RelativeLayout {
@@ -19,33 +23,33 @@ class PhotoBrowser: RelativeLayout {
 
         var DEFAULT_OFFSCREEN_PAGE_LIMIT = 1
 
-        lateinit var loader: PhotoLoader
+        lateinit var configuration: PhotoBrowserConfiguration
 
     }
 
     lateinit var callback: PhotoBrowserCallback
 
-    var indicator: String = ""
+    var indicator = IndicatorType.NONE
 
         set(value) {
             field = value
             when (value) {
-                "dot" -> {
-                    dotIndicator.visibility = View.VISIBLE
-                    numberIndicator.visibility = View.GONE
+                IndicatorType.DOT -> {
+                    Util.showView(dotIndicator)
+                    Util.hideView(numberIndicator)
                 }
-                "number" -> {
-                    dotIndicator.visibility = View.GONE
-                    numberIndicator.visibility = View.VISIBLE
+                IndicatorType.NUMBER -> {
+                    Util.showView(numberIndicator)
+                    Util.hideView(dotIndicator)
                 }
                 else -> {
-                    dotIndicator.visibility = View.GONE
-                    numberIndicator.visibility = View.GONE
+                    Util.hideView(dotIndicator)
+                    Util.hideView(numberIndicator)
                 }
             }
         }
 
-    var pageMargin = DEFAULT_PAGE_MARGIN
+    var pageMargin = 0
 
         set(value) {
             if (field == value) {
@@ -55,7 +59,7 @@ class PhotoBrowser: RelativeLayout {
             pager.pageMargin = value
         }
 
-    var offscreenPageLimit = DEFAULT_OFFSCREEN_PAGE_LIMIT
+    var offscreenPageLimit = 0
 
         set(value) {
             if (field == value) {
@@ -65,36 +69,47 @@ class PhotoBrowser: RelativeLayout {
             pager.offscreenPageLimit = value
         }
 
-    var photos = listOf<PhotoModel>()
+    var photos = listOf<Photo>()
 
         set(value) {
+
             field = value
-            if (value.size > 1) {
-                dotIndicator.count = value.size
-                numberIndicator.count = value.size
-                dotIndicator.invalidate()
-                numberIndicator.invalidate()
-                indicator = indicator
+
+            val count = value.size
+
+            dotIndicator.count = count
+            numberIndicator.count = count
+            pager.adapter?.notifyDataSetChanged()
+
+            if (index >= 0 && index < count) {
+                pager.currentItem = index
+                updateStatus(value[index])
             }
             else {
-                dotIndicator.visibility = View.GONE
-                numberIndicator.visibility = View.GONE
+                hideIndicator()
             }
-            pager.adapter?.notifyDataSetChanged()
+
         }
 
     var index = -1
 
         set(value) {
+
             if (field == value) {
                 return
             }
             field = value
+
             dotIndicator.index = value
             numberIndicator.index = value
-            dotIndicator.invalidate()
-            numberIndicator.invalidate()
-            pager.currentItem = value
+
+            if (value >= 0 && value < photos.count()) {
+                if (value != getActualIndex()) {
+                    pager.currentItem = value
+                }
+                updateStatus(photos[value])
+            }
+
         }
 
     constructor(context: Context) : super(context) {
@@ -116,7 +131,17 @@ class PhotoBrowser: RelativeLayout {
         val typedArray = context.obtainStyledAttributes(
                 attrs, R.styleable.PhotoBrowser, defStyle, 0)
 
-        indicator = typedArray.getString(R.styleable.PhotoBrowser_indicator)
+        indicator = when (typedArray.getString(R.styleable.PhotoBrowser_indicator)) {
+            "dot" -> {
+                IndicatorType.DOT
+            }
+            "number" -> {
+                IndicatorType.NUMBER
+            }
+            else -> {
+                IndicatorType.NONE
+            }
+        }
 
         pageMargin = typedArray.getDimensionPixelSize(
             R.styleable.PhotoBrowser_pageMargin,
@@ -136,19 +161,48 @@ class PhotoBrowser: RelativeLayout {
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
+                index = position + if (positionOffset >= 0.5) 1 else 0
             }
 
             override fun onPageSelected(position: Int) {
-                index = position
+
             }
 
         })
 
+        val onPageUpdate = { photo: Photo ->
+            if (isCurrentPhoto(photo)) {
+                updateStatus(photo)
+            }
+        }
+
         pager.adapter = object: PagerAdapter() {
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
-                val view = PhotoPage(context, pager, loader, position, photos[position], callback)
+                val view = PhotoPage(
+                    context,
+                    pager,
+                    configuration,
+                    position,
+                    photos[position]
+                )
+                view.onScaleChange = onPageUpdate
+                view.onLoadStart = onPageUpdate
+                view.onLoadEnd = onPageUpdate
+                view.onDragStart = onPageUpdate
+                view.onDragEnd = onPageUpdate
+                view.onTap = {
+                    callback.onTap(it)
+                }
+                view.onLongPress = {
+                    callback.onLongPress(it)
+                }
+                view.onSave = { photo, success ->
+                    if (!success) {
+                        Util.showView(saveButton)
+                    }
+                    callback.onSave(photo, success)
+                }
                 container.addView(view)
                 return view
             }
@@ -164,7 +218,92 @@ class PhotoBrowser: RelativeLayout {
             override fun getCount(): Int {
                 return photos.size
             }
+
         }
+
+        rawButton.setOnClickListener {
+            getCurrentPage().loadRawPhoto()
+        }
+
+        saveButton.setOnClickListener {
+            Util.hideView(saveButton)
+            getCurrentPage().savePhoto()
+        }
+
+    }
+
+    private fun getActualIndex(): Int {
+        return Math.round(pager.scrollX.toFloat() / width)
+    }
+
+    private fun getCurrentPage(): PhotoPage {
+        return pager.getChildAt(index) as PhotoPage
+    }
+
+    private fun isCurrentPhoto(photo: Photo): Boolean {
+        return index == photos.indexOf(photo)
+    }
+
+    private fun updateStatus(photo: Photo) {
+        if (photo.isDragging) {
+            Util.hideView(rawButton)
+            Util.hideView(saveButton)
+            hideIndicator()
+        }
+        else {
+            if (photo.isRawButtonVisible) {
+                Util.showView(rawButton)
+            }
+            else {
+                Util.hideView(rawButton)
+            }
+            if (photo.isSaveButtonVisible) {
+                Util.showView(saveButton)
+            }
+            else {
+                Util.hideView(saveButton)
+            }
+            showIndicator()
+        }
+    }
+
+    private fun showIndicator() {
+        when (indicator) {
+            IndicatorType.DOT -> {
+                Util.showView(dotIndicator)
+                dotIndicator.invalidate()
+            }
+            IndicatorType.NUMBER -> {
+                Util.showView(numberIndicator)
+                numberIndicator.invalidate()
+            }
+            else -> {
+
+            }
+        }
+    }
+
+    private fun hideIndicator() {
+        when (indicator) {
+            IndicatorType.DOT -> {
+                Util.hideView(dotIndicator)
+            }
+            IndicatorType.NUMBER -> {
+                Util.hideView(numberIndicator)
+            }
+            else -> {
+
+            }
+        }
+    }
+
+    enum class IndicatorType {
+
+        DOT,
+
+        NUMBER,
+
+        NONE
 
     }
 
