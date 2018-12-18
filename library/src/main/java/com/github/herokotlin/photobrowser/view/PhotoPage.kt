@@ -80,13 +80,9 @@ class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val config
             override fun onScaleChange(scale: Float) {
                 photo.scale = if (scale - 1 > 0.1) scale else 1f
                 if (photo.scale > 1) {
-                    photoView.draggableDirection = PhotoView.DIRECTION_ALL
-                    photoView.bounceDirection = PhotoView.DIRECTION_ALL
                     photoViewPager.pagingEnabled = false
                 }
                 else {
-                    photoView.draggableDirection = draggableDirection
-                    photoView.bounceDirection = bounceDirection
                     photoViewPager.pagingEnabled = pagingEnabled
                 }
                 onScaleChange?.invoke(photo)
