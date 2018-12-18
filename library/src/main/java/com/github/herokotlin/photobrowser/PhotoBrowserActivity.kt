@@ -66,7 +66,7 @@ class PhotoBrowserActivity: AppCompatActivity() {
 
         browserView.index = index
 
-        browserView.pageMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pageMargin.toFloat(), resources.displayMetrics).toInt() 
+        browserView.pageMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pageMargin.toFloat(), resources.displayMetrics).toInt()
 
     }
 }
