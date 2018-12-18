@@ -55,32 +55,13 @@ class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val config
         }
 
         // 图片可拖拽的方向
-        var draggableDirection = PhotoView.DIRECTION_VERTICAL
+        val draggableDirection = PhotoView.DIRECTION_ALL
 
         // 图片弹簧效果的方向
-        var bounceDirection = PhotoView.DIRECTION_VERTICAL
+        val bounceDirection = PhotoView.DIRECTION_ALL
 
-        var pagingEnabled = true
-
-        val firstPage = photoViewPager.getFirstPage()
-        val lastPage = photoViewPager.getLastPage()
-
-        // 只有一页可以随意拖拽
-        if (firstPage != lastPage) {
-            if (index == firstPage) {
-                draggableDirection = draggableDirection or PhotoView.DIRECTION_RIGHT
-                bounceDirection = bounceDirection or PhotoView.DIRECTION_LEFT
-            }
-            else if (index == lastPage) {
-                draggableDirection = draggableDirection or PhotoView.DIRECTION_LEFT
-                bounceDirection = bounceDirection or PhotoView.DIRECTION_RIGHT
-            }
-        }
-        else {
-            draggableDirection = PhotoView.DIRECTION_ALL
-            bounceDirection = PhotoView.DIRECTION_ALL
-            pagingEnabled = false
-        }
+        // 是否能翻页
+        val pagingEnabled = true
 
         // 设置拖拽和弹簧方向
         photoView.draggableDirection = draggableDirection
