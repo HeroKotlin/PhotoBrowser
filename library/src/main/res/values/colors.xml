@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="photo_browser_bg_color">#000000</color>
+
     <color name="photo_browser_progress_bar_color">#55FFFFFF</color>
 
     <color name="photo_browser_number_indicator_text_color">#EEFFFFFF</color>

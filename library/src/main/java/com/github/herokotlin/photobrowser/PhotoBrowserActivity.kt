@@ -19,12 +19,15 @@ class PhotoBrowserActivity: AppCompatActivity() {
 
         private const val KEY_PHOTOS = "photos"
 
+        private const val KEY_INDICATOR = "indicator"
+
         private const val KEY_PAGE_MARGIN = "pageMargin"
 
-        fun newInstance(context: Context, photos: ArrayList<Photo>, index: Int, pageMargin: Int) {
+        fun newInstance(context: Context, photos: ArrayList<Photo>, index: Int, indicator: String, pageMargin: Int) {
             val intent = Intent(context, PhotoBrowserActivity::class.java)
             intent.putParcelableArrayListExtra(KEY_PHOTOS, photos)
             intent.putExtra(KEY_INDEX, index)
+            intent.putExtra(KEY_INDICATOR, indicator)
             intent.putExtra(KEY_PAGE_MARGIN, pageMargin)
             context.startActivity(intent)
         }
@@ -50,8 +53,9 @@ class PhotoBrowserActivity: AppCompatActivity() {
 
         val index = intent.getIntExtra(KEY_INDEX, 0)
 
-        val pageMargin = intent.getIntExtra(KEY_PAGE_MARGIN, 0)
+        val indicator = intent.getStringExtra(KEY_INDICATOR)
 
+        val pageMargin = intent.getIntExtra(KEY_PAGE_MARGIN, 0)
 
         browserView.callback = object: PhotoBrowserCallback {
             override fun onTap(photo: Photo) {
@@ -65,6 +69,12 @@ class PhotoBrowserActivity: AppCompatActivity() {
         browserView.photos = photos
 
         browserView.index = index
+
+        browserView.indicator = when (indicator) {
+            "dot" -> { PhotoBrowser.IndicatorType.DOT }
+            "number" -> { PhotoBrowser.IndicatorType.NUMBER }
+            else -> { PhotoBrowser.IndicatorType.NONE }
+        }
 
         browserView.pageMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pageMargin.toFloat(), resources.displayMetrics).toInt()
 
