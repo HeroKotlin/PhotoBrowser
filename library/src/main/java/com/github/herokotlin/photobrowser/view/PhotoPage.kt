@@ -61,7 +61,9 @@ class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val config
         val bounceDirection = PhotoView.DIRECTION_ALL
 
         // 是否能翻页
-        val pagingEnabled = true
+        val pagingEnabled = photoViewPager.getCount() > 1
+
+
 
         // 设置拖拽和弹簧方向
         photoView.draggableDirection = draggableDirection

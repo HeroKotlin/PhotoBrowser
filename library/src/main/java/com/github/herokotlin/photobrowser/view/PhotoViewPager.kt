@@ -30,14 +30,26 @@ class PhotoViewPager: ViewPager {
         return false
     }
 
-    fun getFirstPage(): Int {
+    fun getCount(): Int {
+        val pagerAdapter = adapter
+        if (pagerAdapter != null) {
+            return pagerAdapter.count
+        }
         return 0
     }
 
+    fun getFirstPage(): Int {
+        val count = getCount()
+        if (count > 0) {
+            return count - 1
+        }
+        return -1
+    }
+
     fun getLastPage(): Int {
-        val pagerAdapter = adapter
-        if (pagerAdapter != null) {
-            return pagerAdapter.count - 1
+        val count = getCount()
+        if (count > 0) {
+            return count - 1
         }
         return -1
     }
