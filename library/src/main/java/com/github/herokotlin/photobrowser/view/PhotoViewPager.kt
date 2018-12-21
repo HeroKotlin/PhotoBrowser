@@ -41,7 +41,7 @@ class PhotoViewPager: ViewPager {
     fun getFirstPage(): Int {
         val count = getCount()
         if (count > 0) {
-            return count - 1
+            return 0
         }
         return -1
     }
