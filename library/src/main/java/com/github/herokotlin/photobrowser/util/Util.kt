@@ -2,7 +2,7 @@ package com.github.herokotlin.photobrowser.util
 
 import android.view.View
 
-object Util {
+internal object Util {
 
     fun showView(view: View) {
         view.visibility = View.VISIBLE
