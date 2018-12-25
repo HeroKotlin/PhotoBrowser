@@ -109,7 +109,7 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
     fun savePhoto() {
 
         // 让外部决定图片保存在哪
-        val success = configuration.save(photoView.drawable)
+        val success = configuration.save(loadedUrl, photoView.drawable)
 
         onSave?.invoke(photo, success)
 

@@ -9,6 +9,6 @@ interface PhotoBrowserConfiguration {
 
     fun isLoaded(url: String): Boolean
 
-    fun save(drawable: Drawable): Boolean
+    fun save(url: String, drawable: Drawable): Boolean
 
 }
