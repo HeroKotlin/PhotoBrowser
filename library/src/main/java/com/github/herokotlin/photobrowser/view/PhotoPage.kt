@@ -44,16 +44,6 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
 
         LayoutInflater.from(context).inflate(R.layout.photo_browser_page, this)
 
-        var url = photo.highQualityUrl
-
-        if (hasRawUrl && (configuration.isLoaded(photo.rawUrl) || photo.isRawPhotoLoaded)) {
-            url = photo.rawUrl
-        }
-
-        if (url != loadedUrl) {
-            loadPhoto(url)
-        }
-
         // 图片可拖拽的方向
         val draggableDirection = PhotoView.DIRECTION_ALL
 
@@ -63,8 +53,6 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         // 是否能翻页
         val pagingEnabled = photoViewPager.getCount() > 1
 
-
-
         // 设置拖拽和弹簧方向
         photoView.draggableDirection = draggableDirection
         photoView.bounceDirection = bounceDirection
@@ -72,7 +60,6 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         photoViewPager.pagingEnabled = pagingEnabled
 
         // 图片和 ViewPager 的交互
-
         photoView.callback = object: PhotoViewCallback {
 
             override fun onReset() {
@@ -108,6 +95,16 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
                 onDragEnd?.invoke(photo)
             }
 
+        }
+
+        var url = photo.highQualityUrl
+
+        if (hasRawUrl && (configuration.isLoaded(photo.rawUrl) || photo.isRawPhotoLoaded)) {
+            url = photo.rawUrl
+        }
+
+        if (url != loadedUrl) {
+            loadPhoto(url)
         }
 
     }
