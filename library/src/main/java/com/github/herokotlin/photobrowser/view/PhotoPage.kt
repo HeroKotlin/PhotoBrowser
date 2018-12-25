@@ -1,9 +1,6 @@
 package com.github.herokotlin.photobrowser.view
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.github.herokotlin.photobrowser.PhotoBrowserConfiguration
@@ -111,10 +108,10 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
 
     fun savePhoto() {
 
-        val bitmap = configuration.getBitmap(photoView.drawable)
+        // 让外部决定图片保存在哪
+        val success = configuration.save(photoView.drawable)
 
-        val localUrl = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "", "")
-        onSave?.invoke(photo, localUrl != null)
+        onSave?.invoke(photo, success)
 
     }
 
