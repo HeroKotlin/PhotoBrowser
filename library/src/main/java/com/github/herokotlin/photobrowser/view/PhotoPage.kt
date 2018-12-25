@@ -111,13 +111,7 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
 
     fun savePhoto() {
 
-        val drawable = photoView.drawable
-        val width = drawable.intrinsicWidth
-        val height = drawable.intrinsicHeight
-
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        drawable.draw(canvas)
+        val bitmap = configuration.getBitmap(photoView.drawable)
 
         val localUrl = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "", "")
         onSave?.invoke(photo, localUrl != null)
