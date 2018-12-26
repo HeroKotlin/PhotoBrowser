@@ -20,7 +20,7 @@ class PhotoBrowser: RelativeLayout {
 
         var DEFAULT_PAGE_MARGIN = 30
 
-        var DEFAULT_OFFSCREEN_PAGE_LIMIT = 1
+        var DEFAULT_OFFSCREEN_PAGE_LIMIT = 2
 
         lateinit var configuration: PhotoBrowserConfiguration
 
