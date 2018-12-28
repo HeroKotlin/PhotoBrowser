@@ -35,7 +35,7 @@ androidExtensions {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.github.herokotlin:PhotoView:0.1.4'
+    implementation 'com.github.herokotlin:PhotoView:0.1.5'
     implementation 'com.github.herokotlin:CircleSpinner:0.0.2'
     implementation 'com.github.herokotlin:DotIndicator:0.0.5'
     implementation 'com.github.herokotlin:NumberIndicator:0.0.3'
