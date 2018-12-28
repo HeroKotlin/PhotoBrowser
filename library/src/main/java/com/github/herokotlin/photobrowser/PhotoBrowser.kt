@@ -13,6 +13,7 @@ import com.github.herokotlin.photobrowser.model.Photo
 import com.github.herokotlin.photobrowser.util.Util
 import com.github.herokotlin.photobrowser.view.PhotoPage
 import kotlinx.android.synthetic.main.photo_browser.view.*
+import kotlinx.android.synthetic.main.photo_browser_page.view.*
 
 class PhotoBrowser: RelativeLayout {
 
@@ -201,12 +202,6 @@ class PhotoBrowser: RelativeLayout {
                 view.onLongPress = {
                     callback.onLongPress(it)
                 }
-                view.onSave = { photo, success ->
-                    if (!success) {
-                        Util.showView(saveButton)
-                    }
-                    callback.onSave(photo, success)
-                }
                 container.addView(view)
                 return view
             }
@@ -230,8 +225,19 @@ class PhotoBrowser: RelativeLayout {
         }
 
         saveButton.setOnClickListener {
+
             Util.hideView(saveButton)
-            getCurrentPage().savePhoto()
+
+            val currentPage = getCurrentPage()
+
+            // 让外部决定图片保存在哪
+            val success = configuration.save(currentPage.loadedUrl, currentPage.photoView.drawable)
+            if (!success) {
+                Util.showView(saveButton)
+            }
+
+            callback.onSave(currentPage.photo, success)
+
         }
 
     }

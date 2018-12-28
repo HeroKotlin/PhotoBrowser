@@ -13,13 +13,7 @@ import kotlinx.android.synthetic.main.photo_browser_page.view.*
 
 internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val configuration: PhotoBrowserConfiguration, val index: Int, val photo: Photo) : RelativeLayout(context) {
 
-    private var loadedUrl = ""
-
-    private var hasRawUrl = false
-
-        get() {
-            return photo.rawUrl != "" && photo.rawUrl != photo.highQualityUrl
-        }
+    var loadedUrl = ""
 
     var onTap: ((Photo) -> Unit)? = null
 
@@ -31,11 +25,15 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
 
     var onLoadEnd: ((Photo) -> Unit)? = null
 
-    var onSave: ((Photo, Boolean) -> Unit)? = null
-
     var onDragStart: ((Photo) -> Unit)? = null
 
     var onDragEnd: ((Photo) -> Unit)? = null
+
+    private var hasRawUrl = false
+
+        get() {
+            return photo.rawUrl != "" && photo.rawUrl != photo.highQualityUrl
+        }
 
     init {
 
@@ -103,15 +101,6 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         if (url != loadedUrl) {
             loadPhoto(url)
         }
-
-    }
-
-    fun savePhoto() {
-
-        // 让外部决定图片保存在哪
-        val success = configuration.save(loadedUrl, photoView.drawable)
-
-        onSave?.invoke(photo, success)
 
     }
 
