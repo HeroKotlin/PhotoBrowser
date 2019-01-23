@@ -7,7 +7,6 @@ import com.github.herokotlin.photobrowser.PhotoBrowserConfiguration
 import com.github.herokotlin.photobrowser.R
 import com.github.herokotlin.photobrowser.model.Photo
 import com.github.herokotlin.photobrowser.util.Util
-import com.github.herokotlin.photoview.PhotoViewCallback
 import com.github.herokotlin.photoview.PhotoView
 import kotlinx.android.synthetic.main.photo_browser_page.view.*
 
@@ -55,41 +54,38 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         photoViewPager.pagingEnabled = pagingEnabled
 
         // 图片和 ViewPager 的交互
-        photoView.callback = object: PhotoViewCallback {
+        photoView.onReset = {
+            photoViewPager.pagingEnabled = pagingEnabled
+        }
 
-            override fun onReset() {
+        photoView.onScaleChange = {
+            val scale = photoView.scale / photoView.minScale
+            photo.scale = if (scale - 1 > 0.1) scale else 1f
+            if (photo.scale > 1) {
+                photoViewPager.pagingEnabled = false
+            }
+            else {
                 photoViewPager.pagingEnabled = pagingEnabled
             }
+            onScaleChange?.invoke(photo)
+        }
 
-            override fun onScaleChange(scale: Float) {
-                photo.scale = if (scale - 1 > 0.1) scale else 1f
-                if (photo.scale > 1) {
-                    photoViewPager.pagingEnabled = false
-                }
-                else {
-                    photoViewPager.pagingEnabled = pagingEnabled
-                }
-                onScaleChange?.invoke(photo)
-            }
+        photoView.onLongPress = {
+            onLongPress?.invoke(photo)
+        }
 
-            override fun onLongPress(x: Float, y: Float) {
-                onLongPress?.invoke(photo)
-            }
+        photoView.onTap = {
+            onTap?.invoke(photo)
+        }
 
-            override fun onTap(x: Float, y: Float) {
-                onTap?.invoke(photo)
-            }
+        photoView.onDragStart = {
+            photo.isDragging = true
+            onDragStart?.invoke(photo)
+        }
 
-            override fun onDragStart() {
-                photo.isDragging = true
-                onDragStart?.invoke(photo)
-            }
-
-            override fun onDragEnd() {
-                photo.isDragging = false
-                onDragEnd?.invoke(photo)
-            }
-
+        photoView.onDragEnd = {
+            photo.isDragging = false
+            onDragEnd?.invoke(photo)
         }
 
         var url = photo.highQualityUrl
