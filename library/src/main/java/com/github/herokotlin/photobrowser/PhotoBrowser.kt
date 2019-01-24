@@ -188,7 +188,6 @@ class PhotoBrowser: RelativeLayout {
                     context,
                     pager,
                     configuration,
-                    position,
                     photos[position]
                 )
                 view.onScaleChange = onPageUpdate

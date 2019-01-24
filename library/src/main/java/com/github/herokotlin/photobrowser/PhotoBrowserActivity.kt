@@ -62,7 +62,8 @@ class PhotoBrowserActivity: AppCompatActivity() {
                 finish()
             }
             override fun onSave(photo: Photo, success: Boolean) {
-                Toast.makeText(applicationContext,  if (success) R.string.photo_browser_save_success else R.string.photo_browser_save_failure, Toast.LENGTH_SHORT).show()
+                val resId = if (success) R.string.photo_browser_save_success else R.string.photo_browser_save_failure
+                Toast.makeText(applicationContext, resId, Toast.LENGTH_SHORT).show()
             }
         }
 

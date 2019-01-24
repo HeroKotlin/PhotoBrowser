@@ -10,7 +10,7 @@ import com.github.herokotlin.photobrowser.util.Util
 import com.github.herokotlin.photoview.PhotoView
 import kotlinx.android.synthetic.main.photo_browser_page.view.*
 
-internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val configuration: PhotoBrowserConfiguration, val index: Int, val photo: Photo) : RelativeLayout(context) {
+internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val configuration: PhotoBrowserConfiguration, val photo: Photo) : RelativeLayout(context) {
 
     var loadedUrl = ""
 
