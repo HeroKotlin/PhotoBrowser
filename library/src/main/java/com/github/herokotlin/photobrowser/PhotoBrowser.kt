@@ -181,28 +181,33 @@ class PhotoBrowser: RelativeLayout {
             }
         }
 
+        val onTap = { photo: Photo ->
+            callback.onTap(photo)
+        }
+
+        val onLongPress = { photo: Photo ->
+            callback.onLongPress(photo)
+        }
+
+        lateinit var currentPage: PhotoPage
+
         pager.adapter = object: PagerAdapter() {
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
-                val view = PhotoPage(
-                    context,
-                    pager,
-                    configuration,
-                    photos[position]
-                )
+                val view = PhotoPage(context, pager, configuration, photos[position])
                 view.onScaleChange = onPageUpdate
                 view.onLoadStart = onPageUpdate
                 view.onLoadEnd = onPageUpdate
                 view.onDragStart = onPageUpdate
                 view.onDragEnd = onPageUpdate
-                view.onTap = {
-                    callback.onTap(it)
-                }
-                view.onLongPress = {
-                    callback.onLongPress(it)
-                }
+                view.onTap = onTap
+                view.onLongPress = onLongPress
                 container.addView(view)
                 return view
+            }
+
+            override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
+                currentPage = `object` as PhotoPage
             }
 
             override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
@@ -220,14 +225,12 @@ class PhotoBrowser: RelativeLayout {
         }
 
         rawButton.setOnClickListener {
-            getCurrentPage().loadRawPhoto()
+            currentPage.loadRawPhoto()
         }
 
         saveButton.setOnClickListener {
 
             Util.hideView(saveButton)
-
-            val currentPage = getCurrentPage()
 
             // 让外部决定图片保存在哪
             val success = configuration.save(currentPage.loadedUrl, currentPage.photoView.drawable)
@@ -239,10 +242,6 @@ class PhotoBrowser: RelativeLayout {
 
         }
 
-    }
-
-    private fun getCurrentPage(): PhotoPage {
-        return pager.getChildAt(index) as PhotoPage
     }
 
     private fun isCurrentPhoto(photo: Photo): Boolean {
