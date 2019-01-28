@@ -90,14 +90,29 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
             onDragEnd?.invoke(photo)
         }
 
-        var url = photo.highQualityUrl
-
-        if (hasRawUrl && (configuration.isLoaded(photo.rawUrl) || photo.isRawPhotoLoaded)) {
-            url = photo.rawUrl
+        val load: (String) -> Unit = {
+            if (it != loadedUrl) {
+                loadPhoto(it)
+            }
         }
 
-        if (url != loadedUrl) {
-            loadPhoto(url)
+        if (hasRawUrl) {
+            if (photo.isRawPhotoLoaded) {
+                load(photo.rawUrl)
+            }
+            else {
+                configuration.isLoaded(photo.rawUrl) {
+                    if (it) {
+                        load(photo.rawUrl)
+                    }
+                    else {
+                        load(photo.highQualityUrl)
+                    }
+                }
+            }
+        }
+        else {
+            load(photo.highQualityUrl)
         }
 
     }
