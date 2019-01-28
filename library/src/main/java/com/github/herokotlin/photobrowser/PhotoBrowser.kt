@@ -14,6 +14,9 @@ import com.github.herokotlin.photobrowser.util.Util
 import com.github.herokotlin.photobrowser.view.PhotoPage
 import kotlinx.android.synthetic.main.photo_browser.view.*
 import kotlinx.android.synthetic.main.photo_browser_page.view.*
+import android.view.Choreographer
+
+
 
 class PhotoBrowser: RelativeLayout {
 
@@ -117,8 +120,6 @@ class PhotoBrowser: RelativeLayout {
                 updateStatus(photos[value])
                 callback.onChange(photos[value], value)
             }
-
-            callback.onLayoutChange()
 
         }
 
@@ -249,7 +250,25 @@ class PhotoBrowser: RelativeLayout {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         adapter.notifyDataSetChanged()
-        callback.onLayoutChange()
+    }
+
+    fun reactNative() {
+
+        Choreographer.getInstance().postFrameCallback(object : Choreographer.FrameCallback {
+            override fun doFrame(frameTimeNanos: Long) {
+                for (i in 0 until childCount) {
+                    val child = getChildAt(i)
+                    child.measure(
+                        View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(measuredHeight, View.MeasureSpec.EXACTLY)
+                    )
+                    child.layout(0, 0, child.measuredWidth, child.measuredHeight)
+                }
+                viewTreeObserver.dispatchOnGlobalLayout()
+                Choreographer.getInstance().postFrameCallback(this)
+            }
+        })
+
     }
 
     fun saveImage() {
@@ -291,7 +310,6 @@ class PhotoBrowser: RelativeLayout {
             }
             showIndicator()
         }
-        callback.onLayoutChange()
     }
 
     private fun showIndicator() {
