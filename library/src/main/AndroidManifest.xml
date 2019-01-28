@@ -2,7 +2,9 @@
           package="com.github.herokotlin.photobrowser">
 
     <application>
-        <activity android:name=".PhotoBrowserActivity">
+        <activity android:name=".PhotoBrowserActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 

@@ -112,6 +112,8 @@ class PhotoBrowser: RelativeLayout {
 
         }
 
+    private lateinit var currentPage: PhotoPage
+
     private var isPageScrolling = false
 
     constructor(context: Context) : super(context) {
@@ -189,8 +191,6 @@ class PhotoBrowser: RelativeLayout {
             callback.onLongPress(photo)
         }
 
-        lateinit var currentPage: PhotoPage
-
         pager.adapter = object: PagerAdapter() {
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -230,17 +230,23 @@ class PhotoBrowser: RelativeLayout {
 
         saveButton.setOnClickListener {
 
-            Util.hideView(saveButton)
-
-            // 让外部决定图片保存在哪
-            val success = configuration.save(currentPage.loadedUrl, currentPage.photoView.drawable)
-            if (!success) {
-                Util.showView(saveButton)
-            }
-
-            callback.onSave(currentPage.photo, success)
+            saveImage()
 
         }
+
+    }
+
+    fun saveImage() {
+
+        Util.hideView(saveButton)
+
+        // 让外部决定图片保存在哪
+        val success = configuration.save(currentPage.loadedUrl, currentPage.photoView.drawable)
+        if (!success) {
+            Util.showView(saveButton)
+        }
+
+        callback.onSave(currentPage.photo, success)
 
     }
 

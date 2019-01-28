@@ -45,8 +45,6 @@ class PhotoBrowserActivity: AppCompatActivity() {
 
         window.decorView.systemUiVisibility = flags
 
-        supportActionBar?.hide()
-
         setContentView(R.layout.photo_browser_activity)
 
         val photos = intent.getParcelableArrayListExtra<Photo>(KEY_PHOTOS)
