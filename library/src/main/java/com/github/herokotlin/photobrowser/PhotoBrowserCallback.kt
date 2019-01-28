@@ -4,15 +4,19 @@ import com.github.herokotlin.photobrowser.model.Photo
 
 interface PhotoBrowserCallback {
 
-    fun onTap(photo: Photo) {
+    fun onChange(photo: Photo, index: Int) {
 
     }
 
-    fun onLongPress(photo: Photo) {
+    fun onTap(photo: Photo, index: Int) {
 
     }
 
-    fun onSave(photo: Photo, success: Boolean) {
+    fun onLongPress(photo: Photo, index: Int) {
+
+    }
+
+    fun onSave(photo: Photo, index: Int, success: Boolean) {
 
     }
 

@@ -19,6 +19,9 @@ data class Photo (
     // 当高清图加载完成后，如果原图，会显示【查看原图】按钮
     val rawUrl: String,
 
+    // 当前显示的图片
+    var currentUrl: String = "",
+
     // 记录当前是否需要显示查看原图按钮
     var isRawButtonVisible: Boolean = false,
 

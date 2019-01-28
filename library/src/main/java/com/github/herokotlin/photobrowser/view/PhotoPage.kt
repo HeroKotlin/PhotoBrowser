@@ -165,6 +165,8 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
             Util.hideView(normalSpinner)
         }
 
+        photo.currentUrl = url
+
         if (success) {
             if (hasRawUrl) {
                 if (url == photo.highQualityUrl) {

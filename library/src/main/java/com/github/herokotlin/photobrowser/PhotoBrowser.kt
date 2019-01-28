@@ -84,6 +84,7 @@ class PhotoBrowser: RelativeLayout {
             if (index >= 0 && index < count) {
                 pager.currentItem = index
                 updateStatus(value[index])
+                callback.onChange(value[index], index)
             }
             else {
                 hideIndicator()
@@ -108,6 +109,7 @@ class PhotoBrowser: RelativeLayout {
                     pager.currentItem = value
                 }
                 updateStatus(photos[value])
+                callback.onChange(photos[value], value)
             }
 
         }
@@ -183,14 +185,6 @@ class PhotoBrowser: RelativeLayout {
             }
         }
 
-        val onTap = { photo: Photo ->
-            callback.onTap(photo)
-        }
-
-        val onLongPress = { photo: Photo ->
-            callback.onLongPress(photo)
-        }
-
         pager.adapter = object: PagerAdapter() {
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -200,8 +194,12 @@ class PhotoBrowser: RelativeLayout {
                 view.onLoadEnd = onPageUpdate
                 view.onDragStart = onPageUpdate
                 view.onDragEnd = onPageUpdate
-                view.onTap = onTap
-                view.onLongPress = onLongPress
+                view.onTap = { photo: Photo ->
+                    callback.onTap(photo, position)
+                }
+                view.onLongPress = { photo: Photo ->
+                    callback.onLongPress(photo, position)
+                }
                 container.addView(view)
                 return view
             }
@@ -229,9 +227,7 @@ class PhotoBrowser: RelativeLayout {
         }
 
         saveButton.setOnClickListener {
-
             saveImage()
-
         }
 
     }
@@ -246,7 +242,7 @@ class PhotoBrowser: RelativeLayout {
             Util.showView(saveButton)
         }
 
-        callback.onSave(currentPage.photo, success)
+        callback.onSave(currentPage.photo, index, success)
 
     }
 
