@@ -79,14 +79,15 @@ class PhotoBrowser: RelativeLayout {
 
             dotIndicator.count = count
             numberIndicator.count = count
-            pager.adapter?.notifyDataSetChanged()
 
             if (index >= 0 && index < count) {
+                adapter.notifyDataSetChanged()
                 pager.currentItem = index
                 updateStatus(value[index])
                 callback.onChange(value[index], index)
             }
             else {
+                isDataDirty = true
                 hideIndicator()
             }
 
@@ -105,6 +106,10 @@ class PhotoBrowser: RelativeLayout {
             numberIndicator.index = value
 
             if (value >= 0 && value < photos.count()) {
+                if (isDataDirty) {
+                    adapter.notifyDataSetChanged()
+                    isDataDirty = false
+                }
                 if (!isPageScrolling && value != pager.currentItem) {
                     pager.currentItem = value
                 }
@@ -116,7 +121,11 @@ class PhotoBrowser: RelativeLayout {
 
     private lateinit var currentPage: PhotoPage
 
+    private lateinit var adapter: PagerAdapter
+
     private var isPageScrolling = false
+
+    private var isDataDirty = false
 
     constructor(context: Context) : super(context) {
         init(null, 0)
@@ -185,7 +194,7 @@ class PhotoBrowser: RelativeLayout {
             }
         }
 
-        pager.adapter = object: PagerAdapter() {
+        adapter = object: PagerAdapter() {
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
                 val view = PhotoPage(context, pager, configuration, photos[position])
@@ -221,6 +230,8 @@ class PhotoBrowser: RelativeLayout {
             }
 
         }
+
+        pager.adapter = adapter
 
         rawButton.setOnClickListener {
             currentPage.loadRawPhoto()
