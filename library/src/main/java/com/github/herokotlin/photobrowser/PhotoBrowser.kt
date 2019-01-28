@@ -83,17 +83,8 @@ class PhotoBrowser: RelativeLayout {
             dotIndicator.count = count
             numberIndicator.count = count
 
-            if (index >= 0 && index < count) {
-                adapter.notifyDataSetChanged()
-                isDataDirty = false
-                pager.currentItem = index
-                updateStatus(value[index])
-                callback.onChange(value[index], index)
-            }
-            else {
-                isDataDirty = true
-                hideIndicator()
-            }
+            isDataDirty = true
+            refresh()
 
         }
 
@@ -109,17 +100,10 @@ class PhotoBrowser: RelativeLayout {
             dotIndicator.index = value
             numberIndicator.index = value
 
-            if (value >= 0 && value < photos.count()) {
-                if (isDataDirty) {
-                    adapter.notifyDataSetChanged()
-                    isDataDirty = false
-                }
-                if (!isPageScrolling && value != pager.currentItem) {
-                    pager.currentItem = value
-                }
-                updateStatus(photos[value])
-                callback.onChange(photos[value], value)
+            if (isPageScrolling) {
+                return
             }
+            refresh()
 
         }
 
@@ -249,25 +233,24 @@ class PhotoBrowser: RelativeLayout {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        adapter.notifyDataSetChanged()
+        isDataDirty = true
+        refresh()
     }
 
-    fun reactNative() {
+    private fun refresh() {
 
-        Choreographer.getInstance().postFrameCallback(object : Choreographer.FrameCallback {
-            override fun doFrame(frameTimeNanos: Long) {
-                for (i in 0 until childCount) {
-                    val child = getChildAt(i)
-                    child.measure(
-                        View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY),
-                        View.MeasureSpec.makeMeasureSpec(measuredHeight, View.MeasureSpec.EXACTLY)
-                    )
-                    child.layout(0, 0, child.measuredWidth, child.measuredHeight)
-                }
-                viewTreeObserver.dispatchOnGlobalLayout()
-                Choreographer.getInstance().postFrameCallback(this)
+        if (index >= 0 && index < photos.count()) {
+            if (isDataDirty) {
+                isDataDirty = false
+                adapter.notifyDataSetChanged()
             }
-        })
+            pager.currentItem = index
+            updateStatus(photos[index])
+            callback.onChange(photos[index], index)
+        }
+        else {
+            hideIndicator()
+        }
 
     }
 
