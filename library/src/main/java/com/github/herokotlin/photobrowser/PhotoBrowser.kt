@@ -82,6 +82,7 @@ class PhotoBrowser: RelativeLayout {
 
             if (index >= 0 && index < count) {
                 adapter.notifyDataSetChanged()
+                isDataDirty = false
                 pager.currentItem = index
                 updateStatus(value[index])
                 callback.onChange(value[index], index)
@@ -241,6 +242,11 @@ class PhotoBrowser: RelativeLayout {
             saveImage()
         }
 
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        adapter.notifyDataSetChanged()
     }
 
     fun saveImage() {
