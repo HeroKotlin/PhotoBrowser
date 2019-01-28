@@ -20,4 +20,8 @@ interface PhotoBrowserCallback {
 
     }
 
+    fun onLayoutChange() {
+
+    }
+
 }

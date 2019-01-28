@@ -118,6 +118,8 @@ class PhotoBrowser: RelativeLayout {
                 callback.onChange(photos[value], value)
             }
 
+            callback.onLayoutChange()
+
         }
 
     private lateinit var currentPage: PhotoPage
@@ -247,6 +249,7 @@ class PhotoBrowser: RelativeLayout {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         adapter.notifyDataSetChanged()
+        callback.onLayoutChange()
     }
 
     fun saveImage() {
@@ -288,6 +291,7 @@ class PhotoBrowser: RelativeLayout {
             }
             showIndicator()
         }
+        callback.onLayoutChange()
     }
 
     private fun showIndicator() {
