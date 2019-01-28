@@ -168,7 +168,9 @@ open class PhotoBrowser: RelativeLayout {
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                index = position + if (positionOffset >= 0.5) 1 else 0
+                if (isPageScrolling) {
+                    index = position + if (positionOffset >= 0.5) 1 else 0
+                }
             }
 
         })
