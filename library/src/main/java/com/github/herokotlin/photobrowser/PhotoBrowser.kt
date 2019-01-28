@@ -14,11 +14,8 @@ import com.github.herokotlin.photobrowser.util.Util
 import com.github.herokotlin.photobrowser.view.PhotoPage
 import kotlinx.android.synthetic.main.photo_browser.view.*
 import kotlinx.android.synthetic.main.photo_browser_page.view.*
-import android.view.Choreographer
 
-
-
-class PhotoBrowser: RelativeLayout {
+open class PhotoBrowser: RelativeLayout {
 
     companion object {
 
@@ -237,23 +234,6 @@ class PhotoBrowser: RelativeLayout {
         refresh()
     }
 
-    private fun refresh() {
-
-        if (index >= 0 && index < photos.count()) {
-            if (isDataDirty) {
-                isDataDirty = false
-                adapter.notifyDataSetChanged()
-            }
-            pager.currentItem = index
-            updateStatus(photos[index])
-            callback.onChange(photos[index], index)
-        }
-        else {
-            hideIndicator()
-        }
-
-    }
-
     fun saveImage() {
 
         Util.hideView(saveButton)
@@ -270,6 +250,25 @@ class PhotoBrowser: RelativeLayout {
 
     private fun isCurrentPhoto(photo: Photo): Boolean {
         return index == photos.indexOf(photo)
+    }
+
+    private fun refresh() {
+
+        if (index >= 0 && index < photos.count()) {
+            if (isDataDirty) {
+                isDataDirty = false
+                adapter.notifyDataSetChanged()
+            }
+            if (pager.currentItem != index) {
+                pager.currentItem = index
+            }
+            updateStatus(photos[index])
+            callback.onChange(photos[index], index)
+        }
+        else {
+            hideIndicator()
+        }
+
     }
 
     private fun updateStatus(photo: Photo) {
