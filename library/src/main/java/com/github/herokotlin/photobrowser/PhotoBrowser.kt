@@ -23,9 +23,9 @@ class PhotoBrowser: RelativeLayout {
 
         var DEFAULT_OFFSCREEN_PAGE_LIMIT = 2
 
-        lateinit var configuration: PhotoBrowserConfiguration
-
     }
+
+    lateinit var configuration: PhotoBrowserConfiguration
 
     lateinit var callback: PhotoBrowserCallback
 
