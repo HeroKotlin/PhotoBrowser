@@ -241,7 +241,7 @@ open class PhotoBrowser: RelativeLayout {
         Util.hideView(saveButton)
 
         // 让外部决定图片保存在哪
-        val success = configuration.save(currentPage.loadedUrl, currentPage.photoView.drawable)
+        val success = configuration.save(currentPage.photo.currentUrl, currentPage.photoView.drawable)
         if (!success) {
             Util.showView(saveButton)
         }
@@ -251,10 +251,9 @@ open class PhotoBrowser: RelativeLayout {
     }
 
     fun detectQRCode(callback: (String) -> Unit) {
-        Thread {
-            val text = currentPage.detectQRCode()
-            callback(text)
-        }.start()
+
+        currentPage.detectQRCode(callback)
+
     }
 
     private fun isCurrentPhoto(photo: Photo): Boolean {

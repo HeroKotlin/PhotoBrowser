@@ -16,8 +16,6 @@ import com.google.zxing.*
 
 internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val configuration: PhotoBrowserConfiguration, val photo: Photo) : RelativeLayout(context) {
 
-    var loadedUrl = ""
-
     var onTap: ((Photo) -> Unit)? = null
 
     var onLongPress: ((Photo) -> Unit)? = null
@@ -94,38 +92,23 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
             onDragEnd?.invoke(photo)
         }
 
-        val load: (String) -> Unit = {
-            if (it != loadedUrl) {
-                loadPhoto(it)
-            }
-        }
-
-        if (hasRawUrl) {
-            if (photo.isRawPhotoLoaded) {
-                load(photo.rawUrl)
-            }
-            else {
-                configuration.isLoaded(photo.rawUrl) {
-                    if (it) {
-                        load(photo.rawUrl)
-                    }
-                    else {
-                        load(photo.highQualityUrl)
-                    }
-                }
-            }
+        if (photo.thumbnailUrl.isNotEmpty()
+            && photo.thumbnailUrl != photo.highQualityUrl
+            && !photo.isHighQualityPhotoLoaded
+        ) {
+            loadThumbnail()
         }
         else {
-            load(photo.highQualityUrl)
+            loadHighQuality()
         }
 
     }
 
-    fun detectQRCode(): String {
+    fun detectQRCode(callback: (String) -> Unit) {
 
         val drawable = photoView.drawable
         if (drawable !is BitmapDrawable) {
-            return ""
+            return callback("")
         }
 
         val bitmap = drawable.bitmap
@@ -135,23 +118,29 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         val data = IntArray(width * height)
         bitmap.getPixels(data, 0, width, 0, 0, width, height)
 
-        val source = RGBLuminanceSource(width, height, data)
-        val reader = QRCodeReader()
-        try {
-            val result = reader.decode(BinaryBitmap(HybridBinarizer(source)))
-            return result.text
-        }
-        catch (e: NotFoundException) {
-            e.printStackTrace()
-        }
-        catch (e: ChecksumException) {
-            e.printStackTrace()
-        }
-        catch (e: FormatException) {
-            e.printStackTrace()
-        }
+        Thread {
 
-        return ""
+            var text = ""
+
+            val source = RGBLuminanceSource(width, height, data)
+            val reader = QRCodeReader()
+            try {
+                val result = reader.decode(BinaryBitmap(HybridBinarizer(source)))
+                text = result.text
+            }
+            catch (e: NotFoundException) {
+                e.printStackTrace()
+            }
+            catch (e: ChecksumException) {
+                e.printStackTrace()
+            }
+            catch (e: FormatException) {
+                e.printStackTrace()
+            }
+
+            callback(text)
+
+        }.start()
 
     }
 
@@ -166,6 +155,35 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         else {
             photoView.bounceDirection = PhotoView.DIRECTION_VERTICAL
         }
+    }
+
+    private fun loadThumbnail() {
+
+        loadPhoto(photo.thumbnailUrl)
+
+    }
+
+    private fun loadHighQuality() {
+
+        if (hasRawUrl) {
+            if (photo.isRawPhotoLoaded) {
+                loadPhoto(photo.rawUrl)
+            }
+            else {
+                configuration.isLoaded(photo.rawUrl) {
+                    if (it) {
+                        loadPhoto(photo.rawUrl)
+                    }
+                    else {
+                        loadPhoto(photo.highQualityUrl)
+                    }
+                }
+            }
+        }
+        else {
+            loadPhoto(photo.highQualityUrl)
+        }
+
     }
 
     private fun loadPhoto(url: String) {
@@ -221,17 +239,21 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         photo.currentUrl = url
 
         if (success) {
-            if (hasRawUrl) {
-                if (url == photo.highQualityUrl) {
-                    photo.isRawButtonVisible = true
-                }
-                else {
-                    photo.isRawPhotoLoaded = url == photo.rawUrl
-                    photo.isRawButtonVisible = false
-                }
+            if (photo.thumbnailUrl != photo.highQualityUrl && url == photo.thumbnailUrl) {
+                post { loadHighQuality() }
             }
-            photo.isSaveButtonVisible = true
-            loadedUrl = url
+            else {
+                if (url == photo.highQualityUrl) {
+                    photo.isHighQualityPhotoLoaded = true
+                }
+                else if (url == photo.rawUrl) {
+                    photo.isRawPhotoLoaded = true
+                }
+                if (hasRawUrl) {
+                    photo.isRawButtonVisible = url == photo.highQualityUrl
+                }
+                photo.isSaveButtonVisible = true
+            }
         }
         else if (hasRawUrl && url == photo.rawUrl) {
             photo.isRawButtonVisible = true
