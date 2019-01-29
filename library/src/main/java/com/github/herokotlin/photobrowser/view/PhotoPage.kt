@@ -8,7 +8,11 @@ import com.github.herokotlin.photobrowser.R
 import com.github.herokotlin.photobrowser.model.Photo
 import com.github.herokotlin.photobrowser.util.Util
 import com.github.herokotlin.photoview.PhotoView
+import com.google.zxing.qrcode.QRCodeReader
 import kotlinx.android.synthetic.main.photo_browser_page.view.*
+import com.google.zxing.common.HybridBinarizer
+import android.graphics.drawable.BitmapDrawable
+import com.google.zxing.*
 
 internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val configuration: PhotoBrowserConfiguration, val photo: Photo) : RelativeLayout(context) {
 
@@ -114,6 +118,40 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         else {
             load(photo.highQualityUrl)
         }
+
+    }
+
+    fun detectQRCode(): String {
+
+        val drawable = photoView.drawable
+        if (drawable !is BitmapDrawable) {
+            return ""
+        }
+
+        val bitmap = drawable.bitmap
+
+        val width = bitmap.width
+        val height = bitmap.height
+        val data = IntArray(width * height)
+        bitmap.getPixels(data, 0, width, 0, 0, width, height)
+
+        val source = RGBLuminanceSource(width, height, data)
+        val reader = QRCodeReader()
+        try {
+            val result = reader.decode(BinaryBitmap(HybridBinarizer(source)))
+            return result.text
+        }
+        catch (e: NotFoundException) {
+            e.printStackTrace()
+        }
+        catch (e: ChecksumException) {
+            e.printStackTrace()
+        }
+        catch (e: FormatException) {
+            e.printStackTrace()
+        }
+
+        return ""
 
     }
 

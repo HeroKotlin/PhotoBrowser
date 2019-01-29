@@ -250,6 +250,13 @@ open class PhotoBrowser: RelativeLayout {
 
     }
 
+    fun detectQRCode(callback: (String) -> Unit) {
+        Thread {
+            val text = currentPage.detectQRCode()
+            callback(text)
+        }.start()
+    }
+
     private fun isCurrentPhoto(photo: Photo): Boolean {
         return index == photos.indexOf(photo)
     }
