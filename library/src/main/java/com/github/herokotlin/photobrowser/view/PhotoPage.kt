@@ -12,6 +12,8 @@ import com.google.zxing.qrcode.QRCodeReader
 import kotlinx.android.synthetic.main.photo_browser_page.view.*
 import com.google.zxing.common.HybridBinarizer
 import android.graphics.drawable.BitmapDrawable
+import android.os.Handler
+import android.os.Looper
 import com.google.zxing.*
 
 internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, val configuration: PhotoBrowserConfiguration, val photo: Photo) : RelativeLayout(context) {
@@ -118,6 +120,8 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         val data = IntArray(width * height)
         bitmap.getPixels(data, 0, width, 0, 0, width, height)
 
+        val handler = Handler(Looper.getMainLooper())
+
         Thread {
 
             var text = ""
@@ -138,7 +142,9 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
                 e.printStackTrace()
             }
 
-            callback(text)
+            handler.post {
+                callback(text)
+            }
 
         }.start()
 
