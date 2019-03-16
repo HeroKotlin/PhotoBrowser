@@ -32,7 +32,7 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
 
     var onDragEnd: ((Photo) -> Unit)? = null
 
-    private var hasRawUrl = false
+    private val hasRawUrl: Boolean
 
         get() {
             return photo.rawUrl != "" && photo.rawUrl != photo.highQualityUrl
@@ -80,7 +80,7 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
             onLongPress?.invoke(photo)
         }
 
-        photoView.onTap = {
+        photoView.onTap = { _, _ ->
             onTap?.invoke(photo)
         }
 
