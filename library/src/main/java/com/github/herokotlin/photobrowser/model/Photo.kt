@@ -1,9 +1,5 @@
 package com.github.herokotlin.photobrowser.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
 data class Photo (
 
     // 缩略图
@@ -40,4 +36,4 @@ data class Photo (
     // 记录当前的缩放值
     var scale: Float = 1f
 
-): Parcelable
+)
