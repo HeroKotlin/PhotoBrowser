@@ -38,7 +38,7 @@
         app:number_indicator_text_size="@dimen/photo_browser_number_indicator_text_size"
         app:number_indicator_text_color="@color/photo_browser_number_indicator_text_color"/>
 
-    <ImageView
+    <ImageButton
             android:id="@+id/rawButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,11 +46,12 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/photo_browser_raw_button_margin_bottom"
             android:visibility="gone"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:src="@drawable/photo_browser_raw"/>
+            android:minWidth="@dimen/photo_browser_raw_button_min_width"
+            android:minHeight="@dimen/photo_browser_raw_button_min_height"
+            android:src="@drawable/photo_browser_raw"
+            android:background="@android:color/transparent"/>
 
-    <ImageView
+    <ImageButton
             android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,8 +60,9 @@
             android:layout_marginBottom="@dimen/photo_browser_save_button_margin_bottom"
             android:layout_marginRight="@dimen/photo_browser_save_button_margin_right"
             android:visibility="gone"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:src="@drawable/photo_browser_save"/>
+            android:minWidth="@dimen/photo_browser_save_button_min_width"
+            android:minHeight="@dimen/photo_browser_save_button_min_height"
+            android:src="@drawable/photo_browser_save"
+            android:background="@android:color/transparent"/>
 
 </RelativeLayout>

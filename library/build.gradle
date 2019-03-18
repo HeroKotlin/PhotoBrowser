@@ -33,7 +33,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.github.herokotlin:PhotoView:0.2.5'
+    implementation 'com.github.herokotlin:PhotoView:0.2.6'
     implementation 'com.github.herokotlin:CircleSpinner:0.0.4'
     implementation 'com.github.herokotlin:DotIndicator:0.0.7'
     implementation 'com.github.herokotlin:NumberIndicator:0.0.5'

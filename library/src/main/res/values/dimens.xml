@@ -10,9 +10,13 @@
     <dimen name="photo_browser_dot_indicator_radius_active">3dp</dimen>
     <dimen name="photo_browser_dot_indicator_margin_bottom">20dp</dimen>
 
+    <dimen name="photo_browser_save_button_min_width">44dp</dimen>
+    <dimen name="photo_browser_save_button_min_height">44dp</dimen>
     <dimen name="photo_browser_save_button_margin_bottom">40dp</dimen>
     <dimen name="photo_browser_save_button_margin_right">20dp</dimen>
 
+    <dimen name="photo_browser_raw_button_min_width">44dp</dimen>
+    <dimen name="photo_browser_raw_button_min_height">44dp</dimen>
     <dimen name="photo_browser_raw_button_margin_bottom">40dp</dimen>
 
 </resources>

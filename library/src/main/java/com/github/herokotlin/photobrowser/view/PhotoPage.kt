@@ -80,7 +80,7 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
             onLongPress?.invoke(photo)
         }
 
-        photoView.onTap = { _, _ ->
+        photoView.onTap = {
             onTap?.invoke(photo)
         }
 
