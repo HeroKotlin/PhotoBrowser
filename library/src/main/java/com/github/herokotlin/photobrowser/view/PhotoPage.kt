@@ -60,7 +60,6 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
         // 图片和 ViewPager 的交互
         photoView.onReset = {
             photoViewPager.pagingEnabled = pagingEnabled
-            updateBounce()
         }
 
         photoView.onScaleChange = {
@@ -72,7 +71,6 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
             else {
                 photoViewPager.pagingEnabled = pagingEnabled
             }
-            updateBounce()
             onScaleChange?.invoke(photo)
         }
 
@@ -152,15 +150,6 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
 
     fun loadRawPhoto() {
         loadPhoto(photo.rawUrl)
-    }
-
-    private fun updateBounce() {
-        if (photoView.scale > photoView.minScale) {
-            photoView.bounceDirection = PhotoView.DIRECTION_ALL
-        }
-        else {
-            photoView.bounceDirection = PhotoView.DIRECTION_VERTICAL
-        }
     }
 
     private fun loadThumbnail() {
