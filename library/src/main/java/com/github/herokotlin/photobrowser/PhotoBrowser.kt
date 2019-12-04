@@ -173,6 +173,18 @@ open class PhotoBrowser: RelativeLayout {
                 }
             }
 
+            override fun onPageSelected(position: Int) {
+                // 触发此接口，可认为即将滑到目标页
+                // 因为后续还会触发几次 onPageScrolled，可在此先把 isPageScrolling 改为 false，避免再触发 onPageScrolled
+                isPageScrolling = false
+                if (index == position) {
+                    refresh()
+                }
+                else {
+                    index = position
+                }
+            }
+
         })
 
         val onPageUpdate = { photo: Photo ->
