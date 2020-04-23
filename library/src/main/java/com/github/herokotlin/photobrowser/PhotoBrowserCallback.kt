@@ -16,6 +16,10 @@ interface PhotoBrowserCallback {
 
     }
 
+    fun onSavePress(photo: Photo, index: Int) {
+
+    }
+
     fun onSave(photo: Photo, index: Int, success: Boolean) {
 
     }

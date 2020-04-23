@@ -237,7 +237,7 @@ open class PhotoBrowser: RelativeLayout {
         }
 
         saveButton.setOnClickListener {
-            saveImage()
+            callback.onSavePress(photos[index], index)
         }
 
     }
