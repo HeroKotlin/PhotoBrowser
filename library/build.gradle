@@ -33,14 +33,14 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation "androidx.appcompat:appcompat:${safeExtGet('androidxVersion', '1.1.0')}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${safeExtGet('kotlinVersion', '1.3.40')}"
+    implementation "com.journeyapps:zxing-android-embedded:${safeExtGet('zxingVersion', '3.6.0')}"
+
     implementation 'com.github.herokotlin:PhotoView:0.2.8'
     implementation 'com.github.herokotlin:CircleSpinner:0.0.5'
     implementation 'com.github.herokotlin:DotIndicator:0.0.8'
     implementation 'com.github.herokotlin:NumberIndicator:0.0.6'
-    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
-
-    implementation "androidx.appcompat:appcompat:${safeExtGet('androidxVersion', '1.1.0')}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${safeExtGet('kotlinVersion', '1.3.40')}"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
