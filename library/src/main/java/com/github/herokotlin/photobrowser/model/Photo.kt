@@ -18,6 +18,9 @@ data class Photo (
     // 当前显示的图片
     var currentUrl: String = "",
 
+    // 是否可以保存图片
+    var canSave: Boolean = false,
+
     // 记录当前是否需要显示查看原图按钮
     var isRawButtonVisible: Boolean = false,
 

@@ -247,7 +247,7 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
                 if (hasRawUrl) {
                     photo.isRawButtonVisible = url == photo.highQualityUrl
                 }
-                photo.isSaveButtonVisible = true
+                photo.isSaveButtonVisible = photo.canSave
             }
         }
         else if (hasRawUrl && url == photo.rawUrl) {
