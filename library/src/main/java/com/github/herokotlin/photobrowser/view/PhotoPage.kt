@@ -126,18 +126,24 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
 
             val source = RGBLuminanceSource(width, height, data)
             val reader = QRCodeReader()
-            try {
-                val result = reader.decode(BinaryBitmap(HybridBinarizer(source)))
-                text = result.text
-            }
-            catch (e: NotFoundException) {
-                e.printStackTrace()
-            }
-            catch (e: ChecksumException) {
-                e.printStackTrace()
-            }
-            catch (e: FormatException) {
-                e.printStackTrace()
+            val sourceList = listOf(source, source.invert())
+            for (element in sourceList) {
+                try {
+                    val result = reader.decode(BinaryBitmap(HybridBinarizer(element)))
+                    text = result.text
+                }
+                catch (e: NotFoundException) {
+                    e.printStackTrace()
+                }
+                catch (e: ChecksumException) {
+                    e.printStackTrace()
+                }
+                catch (e: FormatException) {
+                    e.printStackTrace()
+                }
+                if (text.isNotBlank()) {
+                    break
+                }
             }
 
             handler.post {
