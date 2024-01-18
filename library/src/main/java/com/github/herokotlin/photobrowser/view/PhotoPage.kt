@@ -1,6 +1,7 @@
 package com.github.herokotlin.photobrowser.view
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.github.herokotlin.photobrowser.PhotoBrowserConfiguration
@@ -111,38 +112,63 @@ internal class PhotoPage(context: Context, val photoViewPager: PhotoViewPager, v
             return callback("")
         }
 
-        val bitmap = drawable.bitmap
-
-        val width = bitmap.width
-        val height = bitmap.height
-        val data = IntArray(width * height)
-        bitmap.getPixels(data, 0, width, 0, 0, width, height)
-
         val handler = Handler(Looper.getMainLooper())
 
         Thread {
 
+            val bitmap = drawable.bitmap
+
+            val readQRCode = fun(sourceImage: Bitmap): String {
+                val width = sourceImage.width
+                val height = sourceImage.height
+                val data = IntArray(width * height)
+                sourceImage.getPixels(data, 0, width, 0, 0, width, height)
+
+                var text = ""
+
+                val source = RGBLuminanceSource(width, height, data)
+                val reader = QRCodeReader()
+                val sourceList = listOf(source, source.invert())
+                for (element in sourceList) {
+                    try {
+                        val result = reader.decode(BinaryBitmap(HybridBinarizer(element)))
+                        text = result.text
+                    }
+                    catch (e: NotFoundException) {
+                        e.printStackTrace()
+                    }
+                    catch (e: ChecksumException) {
+                        e.printStackTrace()
+                    }
+                    catch (e: FormatException) {
+                        e.printStackTrace()
+                    }
+                    if (text.isNotBlank()) {
+                        break
+                    }
+                }
+                return text
+            }
+
             var text = ""
 
-            val source = RGBLuminanceSource(width, height, data)
-            val reader = QRCodeReader()
-            val sourceList = listOf(source, source.invert())
-            for (element in sourceList) {
-                try {
-                    val result = reader.decode(BinaryBitmap(HybridBinarizer(element)))
-                    text = result.text
-                }
-                catch (e: NotFoundException) {
-                    e.printStackTrace()
-                }
-                catch (e: ChecksumException) {
-                    e.printStackTrace()
-                }
-                catch (e: FormatException) {
-                    e.printStackTrace()
-                }
+            // 图片太大无法识别二维码
+            var sourceImage = bitmap
+            var width = bitmap.width
+            var height = bitmap.height
+
+            while (true) {
+                text = readQRCode(sourceImage)
                 if (text.isNotBlank()) {
                     break
+                }
+                else {
+                    width = (width.toFloat() * 0.7).toInt()
+                    height = (height.toFloat() * 0.7).toInt()
+                    if (width < 200 || height < 200) {
+                        break
+                    }
+                    sourceImage = Bitmap.createScaledBitmap(bitmap, width, height, true)
                 }
             }
 
