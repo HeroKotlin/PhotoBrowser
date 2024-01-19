@@ -262,9 +262,9 @@ open class PhotoBrowser: RelativeLayout {
 
     }
 
-    fun detectQRCode(callback: (String) -> Unit) {
+    fun decodeQRCode(callback: (String) -> Unit) {
 
-        currentPage.detectQRCode(callback)
+        currentPage.decodeQRCode(callback)
 
     }
 
