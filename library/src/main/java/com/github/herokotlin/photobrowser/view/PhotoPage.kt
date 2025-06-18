@@ -4,14 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.github.herokotlin.photobrowser.PhotoBrowserConfiguration
-import com.github.herokotlin.photobrowser.R
 import com.github.herokotlin.photobrowser.model.Photo
 import com.github.herokotlin.photobrowser.util.Util
 import com.github.herokotlin.photoview.PhotoView
-import kotlinx.android.synthetic.main.photo_browser_page.view.*
 import android.graphics.drawable.BitmapDrawable
 import android.os.Handler
 import android.os.Looper
+import com.github.herokotlin.photobrowser.databinding.PhotoBrowserPageBinding
 import com.github.herokotlin.qrcode.QRCode
 
 internal class PhotoPage(context: Context, private val photoViewPager: PhotoViewPager, private val configuration: PhotoBrowserConfiguration, val photo: Photo) : RelativeLayout(context) {
@@ -30,6 +29,9 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
 
     var onDragEnd: ((Photo) -> Unit)? = null
 
+    var binding: PhotoBrowserPageBinding =
+        PhotoBrowserPageBinding.inflate(LayoutInflater.from(context), this, true)
+
     private val hasRawUrl: Boolean
 
         get() {
@@ -37,8 +39,6 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
         }
 
     init {
-
-        LayoutInflater.from(context).inflate(R.layout.photo_browser_page, this)
 
         // 图片可拖拽的方向
         val draggableDirection = PhotoView.DIRECTION_ALL
@@ -50,18 +50,18 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
         val pagingEnabled = photoViewPager.getCount() > 1
 
         // 设置拖拽和弹簧方向
-        photoView.draggableDirection = draggableDirection
-        photoView.bounceDirection = bounceDirection
+        binding.photoView.draggableDirection = draggableDirection
+        binding.photoView.bounceDirection = bounceDirection
 
         photoViewPager.pagingEnabled = pagingEnabled
 
         // 图片和 ViewPager 的交互
-        photoView.onReset = {
+        binding.photoView.onReset = {
             photoViewPager.pagingEnabled = pagingEnabled
         }
 
-        photoView.onScaleChange = {
-            val scale = photoView.scale / photoView.minScale
+        binding.photoView.onScaleChange = {
+            val scale = binding.photoView.scale / binding.photoView.minScale
             photo.scale = if (scale - 1 > 0.1) scale else 1f
             if (photo.scale > 1) {
                 photoViewPager.pagingEnabled = false
@@ -72,20 +72,20 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
             onScaleChange?.invoke(photo)
         }
 
-        photoView.onLongPress = {
+        binding.photoView.onLongPress = {
             onLongPress?.invoke(photo)
         }
 
-        photoView.onTap = {
+        binding.photoView.onTap = {
             onTap?.invoke(photo)
         }
 
-        photoView.onDragStart = {
+        binding.photoView.onDragStart = {
             photo.isDragging = true
             onDragStart?.invoke(photo)
         }
 
-        photoView.onDragEnd = {
+        binding.photoView.onDragEnd = {
             photo.isDragging = false
             onDragEnd?.invoke(photo)
         }
@@ -104,7 +104,7 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
 
     fun decodeQRCode(callback: (String) -> Unit) {
 
-        val drawable = photoView.drawable
+        val drawable = binding.photoView.drawable
         if (drawable !is BitmapDrawable) {
             return callback("")
         }
@@ -154,7 +154,7 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
     }
 
     private fun loadPhoto(url: String) {
-        configuration.load(photoView, url,
+        configuration.load(binding.photoView, url,
             { hasProgress ->
                 onLoadStart(url, hasProgress)
             },
@@ -170,10 +170,10 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
     private fun onLoadStart(url: String, hasProgress: Boolean) {
 
         if (hasProgress) {
-            Util.showView(circleSpinner)
+            Util.showView(binding.circleSpinner)
         }
         else {
-            Util.showView(normalSpinner)
+            Util.showView(binding.normalSpinner)
         }
 
         if (url == photo.rawUrl) {
@@ -187,20 +187,20 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
 
     private fun onLoadProgress(loaded: Float, total: Float) {
 
-        if (Util.isVisible(circleSpinner)) {
-            circleSpinner.value = loaded / total
-            circleSpinner.invalidate()
+        if (Util.isVisible(binding.circleSpinner)) {
+            binding.circleSpinner.value = loaded / total
+            binding.circleSpinner.invalidate()
         }
 
     }
 
     private fun onLoadEnd(url: String, success: Boolean) {
 
-        if (Util.isVisible(circleSpinner)) {
-            Util.hideView(circleSpinner)
+        if (Util.isVisible(binding.circleSpinner)) {
+            Util.hideView(binding.circleSpinner)
         }
         else {
-            Util.hideView(normalSpinner)
+            Util.hideView(binding.normalSpinner)
         }
 
         photo.currentUrl = url

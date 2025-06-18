@@ -9,11 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import com.github.herokotlin.photobrowser.databinding.PhotoBrowserBinding
 import com.github.herokotlin.photobrowser.model.Photo
 import com.github.herokotlin.photobrowser.util.Util
 import com.github.herokotlin.photobrowser.view.PhotoPage
-import kotlinx.android.synthetic.main.photo_browser.view.*
-import kotlinx.android.synthetic.main.photo_browser_page.view.*
 
 open class PhotoBrowser: RelativeLayout {
 
@@ -25,6 +24,8 @@ open class PhotoBrowser: RelativeLayout {
 
     }
 
+    lateinit var binding: PhotoBrowserBinding
+
     lateinit var configuration: PhotoBrowserConfiguration
 
     lateinit var callback: PhotoBrowserCallback
@@ -35,16 +36,16 @@ open class PhotoBrowser: RelativeLayout {
             field = value
             when (value) {
                 IndicatorType.DOT -> {
-                    Util.showView(dotIndicator)
-                    Util.hideView(numberIndicator)
+                    Util.showView(binding.dotIndicator)
+                    Util.hideView(binding.numberIndicator)
                 }
                 IndicatorType.NUMBER -> {
-                    Util.showView(numberIndicator)
-                    Util.hideView(dotIndicator)
+                    Util.showView(binding.numberIndicator)
+                    Util.hideView(binding.dotIndicator)
                 }
                 else -> {
-                    Util.hideView(dotIndicator)
-                    Util.hideView(numberIndicator)
+                    Util.hideView(binding.dotIndicator)
+                    Util.hideView(binding.numberIndicator)
                 }
             }
         }
@@ -56,7 +57,7 @@ open class PhotoBrowser: RelativeLayout {
                 return
             }
             field = value
-            pager.pageMargin = value
+            binding.pager.pageMargin = value
         }
 
     var offscreenPageLimit = 0
@@ -66,7 +67,7 @@ open class PhotoBrowser: RelativeLayout {
                 return
             }
             field = value
-            pager.offscreenPageLimit = value
+            binding.pager.offscreenPageLimit = value
         }
 
     var photos = listOf<Photo>()
@@ -77,8 +78,8 @@ open class PhotoBrowser: RelativeLayout {
 
             val count = value.size
 
-            dotIndicator.count = count
-            numberIndicator.count = count
+            binding.dotIndicator.count = count
+            binding.numberIndicator.count = count
 
             isDataDirty = true
             refresh()
@@ -94,8 +95,8 @@ open class PhotoBrowser: RelativeLayout {
             }
             field = value
 
-            dotIndicator.index = value
-            numberIndicator.index = value
+            binding.dotIndicator.index = value
+            binding.numberIndicator.index = value
 
             if (isPageScrolling) {
                 return
@@ -126,6 +127,7 @@ open class PhotoBrowser: RelativeLayout {
 
     private fun init(attrs: AttributeSet?, defStyle: Int) {
 
+        binding = PhotoBrowserBinding.inflate(LayoutInflater.from(context), this, true)
         LayoutInflater.from(context).inflate(R.layout.photo_browser, this)
 
         val typedArray = context.obtainStyledAttributes(
@@ -154,7 +156,7 @@ open class PhotoBrowser: RelativeLayout {
 
 
 
-        pager.addOnPageChangeListener(object: ViewPager.SimpleOnPageChangeListener() {
+        binding.pager.addOnPageChangeListener(object: ViewPager.SimpleOnPageChangeListener() {
 
             override fun onPageScrollStateChanged(state: Int) {
                 when (state) {
@@ -196,7 +198,7 @@ open class PhotoBrowser: RelativeLayout {
         adapter = object: PagerAdapter() {
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
-                val view = PhotoPage(context, pager, configuration, photos[position])
+                val view = PhotoPage(context, binding.pager, configuration, photos[position])
                 view.onScaleChange = onPageUpdate
                 view.onLoadStart = onPageUpdate
                 view.onLoadEnd = onPageUpdate
@@ -230,13 +232,13 @@ open class PhotoBrowser: RelativeLayout {
 
         }
 
-        pager.adapter = adapter
+        binding.pager.adapter = adapter
 
-        rawButton.setOnClickListener {
+        binding.rawButton.setOnClickListener {
             currentPage.loadRawPhoto()
         }
 
-        saveButton.setOnClickListener {
+        binding.saveButton.setOnClickListener {
             callback.onSavePress(photos[index], index)
         }
 
@@ -250,12 +252,12 @@ open class PhotoBrowser: RelativeLayout {
 
     fun saveImage() {
 
-        Util.hideView(saveButton)
+        Util.hideView(binding.saveButton)
 
         // 让外部决定图片保存在哪
-        val success = configuration.save(currentPage.photo.currentUrl, currentPage.photoView.drawable)
+        val success = configuration.save(currentPage.photo.currentUrl, currentPage.binding.photoView.drawable)
         if (!success) {
-            Util.showView(saveButton)
+            Util.showView(binding.saveButton)
         }
 
         callback.onSave(currentPage.photo, index, success)
@@ -279,8 +281,8 @@ open class PhotoBrowser: RelativeLayout {
                 isDataDirty = false
                 adapter.notifyDataSetChanged()
             }
-            if (pager.currentItem != index) {
-                pager.currentItem = index
+            if (binding.pager.currentItem != index) {
+                binding.pager.currentItem = index
             }
             updateStatus(photos[index])
             callback.onChange(photos[index], index)
@@ -293,22 +295,22 @@ open class PhotoBrowser: RelativeLayout {
 
     private fun updateStatus(photo: Photo) {
         if (photo.isDragging) {
-            Util.hideView(rawButton)
-            Util.hideView(saveButton)
+            Util.hideView(binding.rawButton)
+            Util.hideView(binding.saveButton)
             hideIndicator()
         }
         else {
             if (photo.isRawButtonVisible) {
-                Util.showView(rawButton)
+                Util.showView(binding.rawButton)
             }
             else {
-                Util.hideView(rawButton)
+                Util.hideView(binding.rawButton)
             }
             if (photo.isSaveButtonVisible) {
-                Util.showView(saveButton)
+                Util.showView(binding.saveButton)
             }
             else {
-                Util.hideView(saveButton)
+                Util.hideView(binding.saveButton)
             }
             showIndicator()
         }
@@ -317,12 +319,12 @@ open class PhotoBrowser: RelativeLayout {
     private fun showIndicator() {
         when (indicator) {
             IndicatorType.DOT -> {
-                Util.showView(dotIndicator)
-                dotIndicator.invalidate()
+                Util.showView(binding.dotIndicator)
+                binding.dotIndicator.invalidate()
             }
             IndicatorType.NUMBER -> {
-                Util.showView(numberIndicator)
-                numberIndicator.invalidate()
+                Util.showView(binding.numberIndicator)
+                binding.numberIndicator.invalidate()
             }
             else -> {
 
@@ -333,10 +335,10 @@ open class PhotoBrowser: RelativeLayout {
     private fun hideIndicator() {
         when (indicator) {
             IndicatorType.DOT -> {
-                Util.hideView(dotIndicator)
+                Util.hideView(binding.dotIndicator)
             }
             IndicatorType.NUMBER -> {
-                Util.hideView(numberIndicator)
+                Util.hideView(binding.numberIndicator)
             }
             else -> {
 

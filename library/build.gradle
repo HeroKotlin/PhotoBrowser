@@ -4,16 +4,26 @@ def safeExtGet(prop, fallback) {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 group = 'com.github.herokotlin'
 
 android {
-    compileSdkVersion safeExtGet('compileSdkVersion', 28)
-    buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
+    namespace 'com.github.herokotlin.photobrowser'
+    compileSdkVersion safeExtGet('compileSdkVersion', 35)
+    buildToolsVersion safeExtGet('buildToolsVersion', '35.0.0')
 
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21 // 统一为 Java 21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = "21" // 统一为 Kotlin JVM 21
+    }
     defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', 21)
-        targetSdkVersion safeExtGet('targetSdkVersion', 28)
+        minSdkVersion safeExtGet('minSdkVersion', 20)
+        targetSdkVersion safeExtGet('targetSdkVersion', 35)
         versionCode 1
         versionName "1.0"
 
@@ -33,14 +43,14 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "androidx.appcompat:appcompat:${safeExtGet('androidxVersion', '1.1.0')}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${safeExtGet('kotlinVersion', '1.7.20')}"
+    implementation "androidx.appcompat:appcompat:${safeExtGet('androidxVersion', '1.6.1')}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${safeExtGet('kotlinVersion', '2.0.21')}"
 
-    implementation 'com.github.herokotlin:QRCode:0.0.1'
-    implementation 'com.github.herokotlin:PhotoView:0.2.8'
-    implementation 'com.github.herokotlin:CircleSpinner:0.0.5'
-    implementation 'com.github.herokotlin:DotIndicator:0.0.8'
-    implementation 'com.github.herokotlin:NumberIndicator:0.0.6'
+    implementation 'com.github.herokotlin:QRCode:0.0.2'
+    implementation 'com.github.herokotlin:PhotoView:0.3.0'
+    implementation 'com.github.herokotlin:CircleSpinner:0.0.6'
+    implementation 'com.github.herokotlin:DotIndicator:0.0.9'
+    implementation 'com.github.herokotlin:NumberIndicator:0.0.7'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
