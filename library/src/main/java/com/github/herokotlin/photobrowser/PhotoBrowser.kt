@@ -128,7 +128,6 @@ open class PhotoBrowser: RelativeLayout {
     private fun init(attrs: AttributeSet?, defStyle: Int) {
 
         binding = PhotoBrowserBinding.inflate(LayoutInflater.from(context), this, true)
-        LayoutInflater.from(context).inflate(R.layout.photo_browser, this)
 
         val typedArray = context.obtainStyledAttributes(
                 attrs, R.styleable.PhotoBrowser, defStyle, 0)

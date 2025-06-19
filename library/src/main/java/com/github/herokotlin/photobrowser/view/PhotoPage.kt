@@ -109,11 +109,9 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
             return callback("")
         }
 
-        val handler = Handler(Looper.getMainLooper())
-
         Thread {
             val text = QRCode.decodeQRCode(drawable.bitmap)
-            handler.post {
+            Handler(Looper.getMainLooper()).post {
                 callback(text)
             }
         }.start()
@@ -125,9 +123,7 @@ internal class PhotoPage(context: Context, private val photoViewPager: PhotoView
     }
 
     private fun loadThumbnail() {
-
         loadPhoto(photo.thumbnailUrl)
-
     }
 
     private fun loadHighQuality() {
